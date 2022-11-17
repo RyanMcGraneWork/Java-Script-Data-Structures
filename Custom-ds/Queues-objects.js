@@ -43,7 +43,7 @@ class Queue{
         this.items = {}
         this.rear = 0
         this.front = 0
-    }
+    }       
 
     //Pushes elements to one end of the queue
     //this.rear is the key and the element is the value
@@ -103,3 +103,4 @@ console.log(queue.dequeue())
 //Checks the first element in the queue
 console.log(queue.peek())
 
+//adding comment for commit.
