@@ -1,5 +1,25 @@
 console.log("Hello from main.js");
 
+/********************* INDEX for File *********************/
+// *** Prmitive data types
+// *** Non Primitive Data types - collection of values
+// *** Operators
+// *** Type conversions
+// *** Equality
+// *** Condtional statements
+// *** Looping 
+// *** Functions
+// *** Scope
+// *** Closures
+// *** Function Currying
+// *** this operator
+// *** Prototype
+// *** Prototypal inheritance
+// *** class
+// *** iterables and operators
+// *** Generators
+
+
 /************** Primitive Data types in Java Script ***************/
 
 //Strings
@@ -354,6 +374,7 @@ outter()
 
 //-- this one returns 1 and 2 as we are returning the function instead of invoking it in the inner function
 //-- this is closures
+
 function outter(){
     let counter = 0
     function innner(){
@@ -368,3 +389,309 @@ fn()
 
 
 
+/************** Function Currying  **************/
+/* 
+   --> Currying is a process in functional programming in which we transform a function with 
+         multiple arguments into a sequence of nesting functions that take one argument at a time.
+
+   --> Function f(a, b, c) is transformed to f(a)(b)(c)
+
+   --> currying can be used to create reusable functions 
+ 
+*/
+
+function summed(a, b, c){
+    return a + b + c
+}
+
+console.log(summed(2, 3, 5), 'Not steph Curry')
+
+//sum(2,3,5) -> to sum(2)(3)(5)
+
+function curry(fn)
+{
+    return function(a){
+        return function(b){
+            return function(c){
+                return fn(a, b, c)
+            }
+        }
+    }
+}
+
+const curriedSum = curry(summed)
+console.log(curriedSum(2)(3)(5), 'Curried sum function')
+
+const add2 = curriedSum(2)
+const add3 = add2(3)
+const add5 = add3(5)
+console.log(add5)
+
+
+/************** this Keyword  **************/
+/* 
+   --> How to determine 'this' keyword in JS
+   --> Implicit Binding
+   --> Explicit binding
+   --> New binding
+   --> Default binding
+
+   --> *** Order of Precedence ***
+    --> New binding
+    --> Explicit binding
+    --> Implicit binding
+    --> Default binding 
+ 
+*/
+
+// Implicit Binding - states that when a function is invoked with the dot notation
+// the object to the left of the dot, is what this keyword is referencing. 
+const superHero = {
+    name: 'Batman',
+    sayMyName: function(){
+        console.log(`My name is ${this.name}`)
+    },
+}
+
+// -- dot notation to invoke the function
+superHero.sayMyName()
+
+
+//Explicit Binding - using the call method allows you to specify the context in whcih it is invoked.
+function sayMyName(){
+    console.log(`My name is ${this.name}`)
+}
+
+sayMyName.call(superHero)
+
+// New binding - when we say new, JS under the hood will add an empty object {} to hold the 
+// name property in an object
+function superPerson(name){
+    this.name = name
+}
+
+const p1 = new superPerson('Superman')
+const p2 = new superPerson('Wonderwoman')
+
+console.log(p1.name, p2.name)
+
+// Default binding - this keyword relies on global scope. You need to have the variable declared globally.
+sayMyName()
+ 
+
+
+/************** Prototype **************/
+/* 
+   --> Allows us to add to our existing function on function invokation. 
+   --> So we added the function getfullName() by accessing the importantPerson
+        prototype feature which allows us to define once and use for any instantiated object 
+        of this constructor function.
+    --> because JS is dynamic, we can attach properties of functions / objects at any time   
+    --> In JS every function has a Prototype property which points to an object.
+    
+    Two main uses of Prototype:
+    --> Share propeties and methods across instances
+    --> is inheritance
+*/
+
+//-- Constructor function
+function ImportantPerson(fName, lName){
+    this.firstName = fName
+    this.lastName = lName
+}
+
+const vipPerson = new ImportantPerson('Bruce', 'Wayne')
+const vipPerson2 = new ImportantPerson('Clark', 'Kent')
+
+// --This will only be useful for 1 time. We want this get full name function usable all the time 
+// --so we need to implement prototype
+//      vipPerson.getFullName = function()
+//        {
+//          return this.firstName + ' ' + this.lastName
+//        }
+
+ImportantPerson.prototype.getFullName = function(){
+    return this.firstName + ' ' + this.lastName
+}
+
+console.log(vipPerson.getFullName(), 'Protype working')
+console.log(vipPerson2.getFullName(), 'Protype working')
+
+/************** Prototypal Inheitance **************/
+/* 
+   --> 
+  
+*/
+
+function SuperHeroPerson(fName, lName){
+
+    //this ={}
+    ImportantPerson.call(this, fName, lName)
+    this.isSuperHero = true
+}
+
+SuperHeroPerson.prototype.fightCrime = function(){
+    console.log('Fighting crime')
+}
+
+//Method is inherited through the prototype chain
+SuperHeroPerson.prototype = Object.create(ImportantPerson.prototype)
+
+const batman = new SuperHeroPerson('Bruce', 'Wayne')
+
+SuperHeroPerson.prototype.constructor = SuperHeroPerson
+console.log(batman.getFullName())
+
+/************** Classes **************/
+/* 
+   --> Class Keyword 
+   --> Classes are just syntactical sugar over the standard protypal inheritance
+   --> know how to:
+    --> create a class
+    --> initalise properties
+    --> add methods
+    --> create an indtance of the class
+    --> inherit with super and extends key words
+
+*/
+
+//re-writing the above code with a class
+
+class Persons{
+    constructor(firstNme, lastNme){
+        this.firstName = firstNme
+        this.surName = lastNme
+    }
+
+    sayMyNames(){
+        return this.firstName + ' ' + this.surName
+    }
+}
+
+const classP1 = new Persons('Conor', 'McG')
+console.log(classP1.sayMyNames())
+
+//-- Class based inheritance implemented in JS. Syntactical sugar for the above prototype code.
+//-- the super key word allows us to call the constructor from the class were extending.
+class SuperHuman extends Persons{
+    constructor(firstNme, lastNme){
+        super(firstNme, lastNme)
+        this.isSuperHeros = true
+        
+    }
+
+    fightCrime(){
+        console.log('Fighting Crime')
+    }
+}
+
+const superman = new SuperHuman('Clark', 'Kent')
+console.log(superman.sayMyNames())
+console.log(superman)
+
+/************** Iterables and Iterators **************/
+/* 
+   --> For loop
+   --> While loop
+   --> do While loop
+
+   --> the introduction of iterables and iterators in JS, make it easier for us 
+        to iterate over data of any data types, making all our code uniform and easier 
+        to understand.
+
+    -->An object which implements the iterable protocol is called an iterable.
+    --> For an object to be an iterable it must implement a method at the key 
+        [Symbol.iterator]
+    --> That method should not accept any argument and should return an object which 
+        conforms to the iterator protocol.
+    --> The iterator protocol decides wheter an object is an iterator.
+    --> The object must have a next() method that returns an object with two properties.
+        -- value: which gives the current element
+        -- done: which is boolean value indicating whether or not there are any more elements
+                could be iterared upon.
+*/
+
+//-- Strings
+const str = 'Ryan'
+
+//-- For loop
+for(let i = 0; i < str.length; i++){
+    console.log(str.charAt(i))
+}
+
+//-- For of loop
+for(const char of str){
+    console.log(char)
+}
+
+
+//-- Arrays
+const array = ['B', 'O', 'H', 'S']
+
+//-- for loop
+for(let i = 0; i < array.length; i++){
+    console.log(array[i])
+}
+
+//-- for of loop
+for(const item of array){
+    console.log(item)
+}
+
+//Creating own iterator or iterable
+//JS does this internally for strings, arrays, maps and sets under the hood
+const obj = {
+    [Symbol.iterator]: function(){
+        let step = 0
+        const iterator = {
+            next: function(){
+                step++
+                if(step === 1){
+                    return {value: 'Hello', done: false}
+                }else if(step === 2){
+                    return {value: 'World', done: true}
+                }
+                return {value: undefined, done: true}
+                
+            }
+        }
+        return iterator
+    }
+}
+
+for(const word of obj){
+    console.log(word)
+}
+
+/************** Generators **************/
+/* 
+   --> Generators are for instead of writing your own iterators and iterables, generators
+    are a special class of functions that simplify the task of writing iterators.
+
+    --> Going to create the example above to show the difference.
+
+    --> no need to implement a lot of the functions above:
+        like symbol.iterator ot next()
+   
+*/
+
+function normalFunction(){
+    console.log('Hello')
+    console.log('World')
+}
+
+//-- Special function uses *
+//-- Generator functions can pause their exeuction
+//-- Yield is an operator in which a generator can pause itself.
+function* generatorFunction(){
+    yield 'Helloppp'
+    yield 'Worlddd'
+}
+
+//-- Invoking the function, Generator functions always return a generatorObject
+//-- this generatorObject is an iterator, so can be used in for of loops
+const generatorObject = generatorFunction()
+
+for(const word of generatorObject){
+    console.log(word)
+}
