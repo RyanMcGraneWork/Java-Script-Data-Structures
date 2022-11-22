@@ -50,7 +50,7 @@ while(arrayList.length){
 }
 
 
-/*************** Explain what a callback is and provide a saimple example **************
+/*************** Explain what a callback is and provide a example example **************
 
 --> A callback is a function that is passed into another function as an argument and is 
     executed after some operation has been completed.
@@ -322,3 +322,113 @@ function isAnagram(first, second){
 }
 
 console.log(isAnagram(firstWord, secondWord)); // true
+
+/*************** How would you use a closure to create a private counter? **************/
+/*
+You can create a function within an outer function (a closure) that allows you to update a private variable 
+but the variable wouldn't be accessible from outside the function without the use of a helper function
+*/
+
+function counter() {
+    var _counter = 0;
+    // return an object with several functions that allow you
+    // to modify the private _counter variable
+    return {
+      add: function(increment) { _counter += increment; },
+      retrieve: function() { return 'The counter is currently at: ' + _counter; }
+    }
+  }
+  
+  // error if we try to access the private variable like below
+  // _counter;
+  
+  // usage of our counter function
+  var c = counter();
+  c.add(5); 
+  c.add(9); 
+  
+  // now we can access the private variable in the following way
+  c.retrieve(); // => The counter is currently at: 14
+
+  /* Promises:
+    Callbacks 
+    Promises
+    Async Await
+  
+  */
+
+    //callbacks
+        const fetch = require('node-fetch')
+        const fs = require('fs')
+
+        setTimeout(() => {
+            console.log('waited 1 second')
+        }, 1000);
+    
+    //callbacks example 2:
+        let btn;
+        btn.addEventListener('click', () => {
+            
+        })
+    //error first call back 
+        fs.readFile('./test.txt', 'utf-8', (err, data) => {
+            if(err){
+                console.log("error")
+                console.log(err)
+            }
+            else{
+                console.log('Got data')
+                console.log(data)
+            }
+        });
+
+    //Creating a Promise
+    const myPromise = new Promise((resolve, reject) => {
+        const rand = Math.floor(Math.random() * 2);
+        if(rand === 0){
+            resolve();
+        }else{
+            reject();
+        }
+    })
+
+    //Invoke the newly created promise
+    myPromise
+        .then(() => console.log('success'))
+        .catch(() => console.log('Not success'))
+
+    //use existing promises
+    fs.promises.readFile('./text.txt', 'utf-8')
+        .then((data) => console.log(data))
+        .catch((err) => console.log(err))
+
+    //Fetch with promises
+    fetch('https://djsdj')
+        .then((res) => res.json())
+        .then((data) => console.log(data))
+        .catch((err) => console.log(err))
+
+    //Async await 
+    const loadfile = async () => {
+        try{
+            const data = await fs.promises.readFile('./test.txt', 'UTF-8')
+        }
+        catch (error){
+            console.log(error)
+        }
+    }
+
+// -- Palindrome
+export function isPalindrome(string)
+{
+    let leftIdx = 0;
+    let rightIdx = string-length - 1;
+    while(leftIdx < rightIdx){
+        if(string[leftIdx] !== string[rightIdx]){
+            return false
+        }
+        leftIdx++;
+        rightIdx--;
+    }
+    return true;
+}
