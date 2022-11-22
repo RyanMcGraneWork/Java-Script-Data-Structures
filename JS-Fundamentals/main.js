@@ -21,6 +21,16 @@ console.log("Hello from main.js");
 
 
 /************** Primitive Data types in Java Script ***************/
+/*
+    --> Number
+    --> Strings
+    --> boolean
+    --> bigInt
+    --> symbol
+    --> null
+    --> undefined
+
+*/
 
 //Strings
 const name = "Ryan";
@@ -48,9 +58,14 @@ const data = null
 
 //BigInt type
 
-// Symbol type
+// Symbol type - represents unique values 
 
 /************** Non Primitive Data types in Java Script - Typically a collection of values **************/
+/*
+    --> Object
+    --> arrays   
+
+*/
 
 
 //Object literals, key must be string, int or symbols

@@ -106,6 +106,8 @@ console.log(reverseEachWord, 'Each word reverse')
 --> Different way to check if object is an array:
     --> Array.isArray()
     --> ObjectName.constructor === Array
+    --> Instanceof Array 
+    --> Prototype.toString.call()
 */
 
 const arrayNums = [1, 2, 3]
@@ -120,7 +122,7 @@ console.log(typeof names)
 
 
 //-- Using the Array.isArray method
-console.log(Array.isArray(arrayNums)); // true
+console.log(Array.isArray(arrayNums), 'Using the Array.isArray method'); // true
 console.log(Array.isArray(result)); // false
 console.log(Array.isArray(namer)); // false
 console.log(Array.isArray(names)); // true
@@ -135,6 +137,22 @@ console.log(result.constructor === Array); // false
 console.log(namer.constructor === Array); // false
 console.log(names.constructor === Array); // true
 
+
+//-- The instanceof operator checks if a constructor function is found in the 
+//      prototype chain of an object.
+console.log(arrayNums instanceof Array, 'using the instanceof operator'); // true
+console.log(result instanceof Array); // false
+console.log(namer instanceof Array); // false
+console.log(names instanceof Array); // true
+
+//-- Using the object.prototype.call() method
+
+console.log(Object.prototype.toString.call(arrayNums), 'using the prototype.toString.call method'); // [object Array]
+console.log(Object.prototype.toString.call(result)); // [object Object]
+console.log(Object.prototype.toString.call(namer)); // [object String]
+console.log(Object.prototype.toString.call(names)); // [object Array]
+
+// returns true
 if (Object.prototype.toString.call(arrayNums) === '[object Array]'){
     console.log('Array!')
 }else{
@@ -142,3 +160,165 @@ if (Object.prototype.toString.call(arrayNums) === '[object Array]'){
 }
 
 
+/*************** How to check if a number is an integer **************
+
+--> A simple way to check if a number is an integer is to see if there is a remainder left 
+    when you divide by 1.
+
+*/
+
+let testNum = 6
+
+console.log(typeof(testNum));
+
+function isInt(num){
+    return num % 1 === 0;
+}
+
+console.log(isInt(4));
+
+console.log(isInt(7.2))
+
+/*************** Implement Enqueue and Dequeue using only two stacks **************
+
+--> Enqueue means to add an element
+--> Dequeue means to remove an element
+
+*/
+
+var inputStack = [] // first stack
+var outputStack = [] // second stack
+
+
+// For enqueue, just push the item into the first stack
+function enqueue(stackInput, item){
+    return stackInput.push(item);
+}
+
+function dequeue(stackInput, stackOutput){
+    // Reverse the stack such that the first element of the output stack is the
+    // last element of the input stack. After that, pop the top of the output to
+    // get the first element that was ever pushed into the input stack
+
+    if(stackOutput.length <= 0){
+        while(stackInput.length > 0){
+            var elementToOutput = stackInput.pop();
+            stackOutput.push(elementToOutput);
+        }
+    }
+
+    return stackOutput.pop();
+}
+
+/*************** Duplicate an array **************
+
+--> Use concat to duplicate the array
+
+*/
+
+function duplicate(arr){
+    return arr.concat(arr);
+}
+
+const duplicateArray = duplicate([1,2,3,4,5,6])
+
+console.log(duplicateArray)
+
+// Reverse the array
+const reverseArray = duplicateArray.reverse()
+console.log(reverseArray)
+
+
+/*************** Write a 'multiplication' function which will properly **************
+
+--> Problem:
+    --> console.log(mul(2)(3)(4)); // output : 24
+    --> console.log(mul(4)(3)(4)); // output : 48
+
+    --> know as function currying
+
+*/
+function multiplication(x){
+    return function(y){         //anonymous function 
+       return function(z){      //anonymous function 
+            return x * y * z
+        };
+    };
+};
+
+console.log(multiplication(2)(3)(4))
+console.log(multiplication(4)(3)(4))
+
+
+/*************** Write a function that would allow you to do this **************
+
+--> Problem:
+        var addSix = createBase(6);
+        addSix(10); // returns 16
+        addSix(21); // returns 27
+    
+    
+--> Solution:
+        You can create a closure to keep the value passed to the function createBase even 
+        after the inner function is returned.
+        The inner function that is being returned is created within an outer function, 
+        making it a closure, and it has access to the variables withing the outer function,
+        in this case the variable baseNumber
+*/
+function createBase(baseNumber){
+    return function(N){
+        return baseNumber + N;
+    }
+}
+
+var addSix = createBase(6);
+addSix(10);
+addSix(21);
+
+console.log(addSix(10))
+
+
+/*************** FizzBuzz challenge **************
+
+--> Problem:
+     --> Create a for loop that iterates up to 100 while outputting "fizz" at multiples of 3
+        "buzz" at multiples of 5 and "fizzbuzz" at multiples of 3 and 5
+    
+*/
+for(let i = 0; i <= 100; i++){
+    let fizz = i % 3 == 0;
+    let buzz = i % 5 == 0;
+    console.log(fizz ? (buzz ? 'FizzBuzz' : 'Fizz') : buzz ? 'Buzz': i)
+}
+
+/*************** Given two strings, return true if they are anagrams of one another **************
+
+--> Problem:
+    --> Anagram
+
+    Example:
+    --> "Mary" is an anagram of Army
+    
+    Solution:
+    --> create the function accepting two arguments, first and second words
+    --> Convert to lower case using toLowerCase string method
+    --> split and sort and join back the array to a string
+*/
+
+var firstWord = "Mary had a shoe";
+var secondWord = "Army dah a hoes";
+
+function isAnagram(first, second){
+
+    //For case insensitivity, change both words to lowercase.
+    var a = first.toLowerCase();
+    var b = second.toLowerCase();
+
+    //Sort the strings, and join the resulting array to a string. Comapre the results.
+    a = a.split("").sort().join("");
+    b = b.split("").sort().join("");
+
+    return a === b;
+}
+
+console.log(isAnagram(firstWord, secondWord)); // true
